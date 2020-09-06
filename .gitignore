@@ -1,0 +1,7 @@
+bin/Debug/
+bin/
+/bin/Debug/
+/bin/Debug/*
+/bin/Debug/netcoreapp3.1/*.*
+/obj/Debug/
+/obj/
