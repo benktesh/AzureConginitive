@@ -9,7 +9,7 @@ namespace SpeechTranslation
 
     class Program
     {
-        static void readFromConfig()
+        static void initialize()
         {
             var builder = new ConfigurationBuilder()
            .SetBasePath(System.IO.Directory.GetCurrentDirectory())
@@ -19,26 +19,35 @@ namespace SpeechTranslation
             subscriptionKey = configuration.GetSection("subscriptionKey").Value;
             serviceRegion = configuration.GetSection("serviceRegion").Value;
 
-            if(subscriptionKey == null){
+            if (subscriptionKey == null)
+            {
                 Console.WriteLine("Error: subscription key is null. Plase check appsetting.json");
             }
- 
+
+            config = initSpeechConfig();
+
         }
+
         static string subscriptionKey = ""; //use your own suscription id
         static string serviceRegion = "centralus"; //use your own location //for now defailt
+
+        static SpeechTranslationConfig config = null;
         static void Main(string[] args)
         {
-
+            initialize();
             TranslateSpeechToText().Wait();
         }
 
+
+        private static SpeechTranslationConfig initSpeechConfig()
+        {
+            return SpeechTranslationConfig.FromSubscription(subscriptionKey, serviceRegion);
+        }
+
+
+
         public static async Task TranslateSpeechToText()
         {
-            // Creates an instance of a speech translation config with specified subscription key and service region.
-            // Replace with your own subscription key and region identifier from here: https://aka.ms/speech/sdkregion
-            var config = SpeechTranslationConfig.FromSubscription(subscriptionKey, serviceRegion);
-
-
             // Sets source and target languages.
             // Replace with the languages of your choice, from list found here: https://aka.ms/speech/sttt-languages
             string fromLanguage = "en-US";
@@ -86,6 +95,5 @@ namespace SpeechTranslation
                 }
             }
         }
-
     }
 }
