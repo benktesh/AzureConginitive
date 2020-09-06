@@ -2,16 +2,33 @@
 using System.Threading.Tasks;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Translation;
+using Microsoft.Extensions.Configuration;
 
 namespace SpeechTranslation
 {
 
     class Program
     {
-        static string subscriptionId = ""; //use your own suscription id
-        static string location = "centralus"; //use your own location 
+        static void readFromConfig()
+        {
+            var builder = new ConfigurationBuilder()
+           .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+           .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            IConfigurationRoot configuration = builder.Build();
+
+            subscriptionKey = configuration.GetSection("subscriptionKey").Value;
+            serviceRegion = configuration.GetSection("serviceRegion").Value;
+
+            if(subscriptionKey == null){
+                Console.WriteLine("Error: subscription key is null. Plase check appsetting.json");
+            }
+ 
+        }
+        static string subscriptionKey = ""; //use your own suscription id
+        static string serviceRegion = "centralus"; //use your own location //for now defailt
         static void Main(string[] args)
         {
+
             TranslateSpeechToText().Wait();
         }
 
@@ -19,8 +36,8 @@ namespace SpeechTranslation
         {
             // Creates an instance of a speech translation config with specified subscription key and service region.
             // Replace with your own subscription key and region identifier from here: https://aka.ms/speech/sdkregion
-            var config = SpeechTranslationConfig.FromSubscription(subscriptionId, location);
-            
+            var config = SpeechTranslationConfig.FromSubscription(subscriptionKey, serviceRegion);
+
 
             // Sets source and target languages.
             // Replace with the languages of your choice, from list found here: https://aka.ms/speech/sttt-languages

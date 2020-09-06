@@ -5,3 +5,4 @@ bin/
 /bin/Debug/netcoreapp3.1/*.*
 /obj/Debug/
 /obj/
+/.vscode/
